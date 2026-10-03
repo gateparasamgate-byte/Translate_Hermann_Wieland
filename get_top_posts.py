@@ -2,17 +2,20 @@ import requests
 import json
 import time
 
-ACCESS_TOKEN = "vk1.a.XT5f7sCtw_oWq92wCQG7XkanZRIcfOvUfoqWcoTYPc2lQ7j53W7y7q2XLHFsfI873C_xlXWh-Ib-ZgJZYTEGlJ4AVZj20FgjqUWVIBAn0EFpdcuGMvPNfDc_v3xi34VR0i2jt0Ew99jY6LpNE-euxOWekhWSMe90lU0Cku28PelJOKlAiLgvYlGCo4GIhMx2HAYLUCr4SUa6jst0V0DxEQ"
+# Group token for groups.getById (works from any IP)
+GROUP_TOKEN = "vk1.a.ekJpSfbBzQ5rAMxhLQsAEV1jVe03LiT3rwea9ZrFjHxdx4xDg5ZGyvGMsInZqjn9mWS4zayw9bYjdXzmcwh-uAIEINmr2EQgMEXKgroYkuu_Gd6DjsvXd4DJIZQhlZHc2X8iSIL4zNEr8D8JYXJDGgakr9bBMFYiT2kHHYsc1wKon5GmehWVfVd9Hh_aHI2qVzFHWV-eMrNRvDqUeVVYEQ"
+# User token for wall.get (from VK Admin)
+USER_TOKEN = "vk1.a.Iei1QMZRXbancfUw3Wtu6gOBe-uzEeRUvg2cT0Xr3QsxQyNkszHpCH3QCQXTe3_liqRypzHBY-bYCTpFgwlSPoI5IfJG_h9tg41qClg7NSljnS7TuM2T-dAXtMv8I7TnOtMB9V8QkAW9UPOLnHpEQczeZWX5Jj0hHLC_oM78Xt_bCKeUD13l0JeBW0NmcvGNHLhnxIaiWNdfDtwr4OSmVA"
 SCREEN_NAME = "ex_nord_lux"
 API_VERSION = "5.199"
 
-def vk_api(method, params):
-    params.update({"access_token": ACCESS_TOKEN, "v": API_VERSION})
+def vk_api(method, params, token=None):
+    params.update({"access_token": token or USER_TOKEN, "v": API_VERSION})
     response = requests.post(f"https://api.vk.com/method/{method}", data=params)
     return response.json()
 
 def get_group_id(screen_name):
-    result = vk_api("groups.getById", {"group_id": screen_name})
+    result = vk_api("groups.getById", {"group_id": screen_name}, token=GROUP_TOKEN)
     if "response" in result and "groups" in result["response"]:
         return result["response"]["groups"][0]["id"]
     else:
